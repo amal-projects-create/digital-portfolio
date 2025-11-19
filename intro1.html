@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Intro</title>
+    <style>
+        /* Optional: Centers the video container */
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+        }
+
+        .video-container {
+            /* Adjust max-width to control video size */
+            width: 100%;
+            max-width: 1080px; 
+        }
+
+        video {
+            width: 100%;
+            height: auto;
+            display: block;
+            
+            /* This effectively removes all mouse interaction (play/pause clicks) */
+            pointer-events: none; 
+        }
+    </style>
+</head>
+<body>
+
+    <div class="video-container">
+        <video 
+            muted 
+            autoplay 
+            playsinline
+        >
+            <source src="https://amal-projects-create.github.io/digital-portfolio/intro1.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+    </div>
+
+</body>
+</html>
