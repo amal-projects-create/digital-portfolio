@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Portfolio Overlay</title>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f0f0f0;
+            font-family: sans-serif;
+        }
+
+        /* The main container holds both the video and the overlay */
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 800px; /* Adjust this to change video size */
+            background: #000;
+        }
+
+        video {
+            width: 100%;
+            height: auto;
+            display: block;
+            pointer-events: none; /* Prevents right-click/pausing via click */
+        }
+
+        /* The Red Overlay */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #D32F2F; /* A nice solid Red */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2;
+            transition: opacity 0.3s ease;
+        }
+
+        /* Class to hide the overlay (fade out) */
+        .overlay.hidden {
+            opacity: 0;
+            pointer-events: none; /* Allows clicks to pass through to the video if needed */
+        }
+
+        /* The Button Styling */
+        .play-btn {
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #D32F2F;
+            background-color: white;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+            transition: transform 0.1s ease;
+        }
+
+        .play-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .play-btn:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="video-wrapper">
+        
+        <!-- The Overlay and Button -->
+        <div class="overlay" id="overlay">
+            <button class="play-btn" id="playButton">what she did</button>
+        </div>
+
+        <!-- The Video -->
+        <!-- Removed 'muted' and 'autoplay' because the button triggers it now -->
+        <video id="portfolioVideo" playsinline>
+            <source src="teaching1.mkv" type="video/mkv">
+            Your browser does not support the video tag.
+        </video>
+
+    </div>
+
+    <script>
+        const video = document.getElementById('portfolioVideo');
+        const overlay = document.getElementById('overlay');
+        const playButton = document.getElementById('playButton');
+
+        // 1. Event Listener for the "What She Did" button
+        playButton.addEventListener('click', () => {
+            // Hide the overlay
+            overlay.classList.add('hidden');
+            
+            // Reset video to start (in case it was played before) and play
+            video.currentTime = 0;
+            video.play();
+        });
+
+        // 2. Event Listener for when the video ends
+        video.addEventListener('ended', () => {
+            // Bring the overlay back
+            overlay.classList.remove('hidden');
+        });
+    </script>
+
+</body>
+</html>
