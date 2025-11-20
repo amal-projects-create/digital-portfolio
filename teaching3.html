@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Negative Video Overlay</title>
+    <style>
+        /* 1. Make the Page Unscrollable */
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: #000;
+            overflow: hidden; /* Disables scrolling */
+            font-family: sans-serif;
+        }
+
+        .video-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        /* 2. Make Video Fill Screen & Maintain Aspect Ratio */
+        video {
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover; 
+            display: block;
+            pointer-events: none;
+        }
+
+        /* The Red Overlay (Vice Versa of Green) */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Red Background */
+            background-color: #D32F2F; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10; 
+            transition: opacity 0.5s ease;
+        }
+
+        .overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* The Button Styling */
+        .play-btn {
+            padding: 15px 40px;
+            font-size: 2rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            
+            /* Text color matches the Red background */
+            color: #D32F2F; 
+            background-color: white;
+            
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: transform 0.1s ease;
+            border-radius: 5px; 
+        }
+
+        .play-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .play-btn:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="video-wrapper">
+        
+        <!-- Overlay + Button -->
+        <div class="overlay" id="overlay">
+            <!-- Vice Versa text -->
+            <button class="play-btn" id="playButton">-tive</button>
+        </div>
+
+        <!-- Video Element -->
+        <video id="portfolioVideo" playsinline>
+            <!-- Updated file to teaching3.mp4 -->
+            <source src="teaching3.mp4" type="video/mp4">
+            Your browser does not support the video tag.
+        </video>
+
+    </div>
+
+    <script>
+        const video = document.getElementById('portfolioVideo');
+        const overlay = document.getElementById('overlay');
+        const playButton = document.getElementById('playButton');
+
+        // Click Button -> Hide Overlay -> Play Video
+        playButton.addEventListener('click', () => {
+            overlay.classList.add('hidden');
+            video.currentTime = 0; 
+            video.play();
+        });
+
+        // Video Ends -> Show Overlay again
+        video.addEventListener('ended', () => {
+            overlay.classList.remove('hidden');
+        });
+    </script>
+
+</body>
+</html>
