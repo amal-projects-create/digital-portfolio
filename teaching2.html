@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Positive Video Overlay</title>
+    <style>
+        /* 1. Make the Page Unscrollable */
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100vh;
+            background-color: #000;
+            overflow: hidden; /* Disables scrolling */
+            font-family: sans-serif;
+        }
+
+        .video-wrapper {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        /* 2. Make Video Fill Screen & Maintain Aspect Ratio */
+        video {
+            width: 100vw;
+            height: 100vh;
+            object-fit: cover; /* Zooms to fill screen without stretching */
+            display: block;
+            pointer-events: none;
+        }
+
+        /* The Green Overlay */
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Changed to Green */
+            background-color: #2E7D32; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10; 
+            transition: opacity 0.5s ease;
+        }
+
+        .overlay.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* The Button Styling */
+        .play-btn {
+            padding: 15px 40px;
+            font-size: 2rem; /* Made slightly larger for the short text */
+            font-weight: bold;
+            text-transform: uppercase;
+            
+            /* Text color matches the green background */
+            color: #2E7D32; 
+            background-color: white;
+            
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: transform 0.1s ease;
+            border-radius: 5px; /* Slight rounded corners */
+        }
+
+        .play-btn:hover {
+            transform: scale(1.05);
+        }
+
+        .play-btn:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="video-wrapper">
+        
+        <!-- Overlay + Button -->
+        <div class="overlay" id="overlay">
+            <!-- Changed text to +tive -->
+            <button class="play-btn" id="playButton">+tive</button>
+        </div>
+
+        <!-- Video Element -->
+        <video id="portfolioVideo" playsinline>
+            <!-- MKV Warning: If screen is black, convert file to .mp4 -->
+            <source src="teaching2.mp4" type="video/mp4">
+                      Your browser does not support the video tag.
+        </video>
+
+    </div>
+
+    <script>
+        const video = document.getElementById('portfolioVideo');
+        const overlay = document.getElementById('overlay');
+        const playButton = document.getElementById('playButton');
+
+        // Click Button -> Hide Overlay -> Play Video
+        playButton.addEventListener('click', () => {
+            overlay.classList.add('hidden');
+            video.currentTime = 0; 
+            
+            var playPromise = video.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    console.log("Playback failed (Check file format): " + error);
+                });
+            }
+        });
+
+        // Video Ends -> Show Overlay again
+        video.addEventListener('ended', () => {
+            overlay.classList.remove('hidden');
+        });
+    </script>
+
+</body>
+</html>
