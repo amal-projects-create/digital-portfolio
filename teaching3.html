@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Negative Video Overlay</title>
+    <title>Pausable Video Overlay</title>
     <style>
         /* 1. Make the Page Unscrollable */
         body {
@@ -12,7 +12,7 @@
             width: 100%;
             height: 100vh;
             background-color: #000;
-            overflow: hidden; /* Disables scrolling */
+            overflow: hidden; 
             font-family: sans-serif;
         }
 
@@ -31,27 +31,30 @@
             height: 100vh;
             object-fit: cover; 
             display: block;
-            pointer-events: none;
+            
+            /* IMPORTANT: Changed to allow clicking on the video to pause it */
+            pointer-events: auto; 
+            cursor: pointer; 
         }
 
-        /* The Red Overlay (Vice Versa of Green) */
+        /* The Red Overlay */
         .overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            /* Red Background */
-            background-color: #D32F2F; 
+            background-color: #D32F2F; /* Red */
             display: flex;
             justify-content: center;
             align-items: center;
             z-index: 10; 
-            transition: opacity 0.5s ease;
+            transition: opacity 0.3s ease;
         }
 
         .overlay.hidden {
             opacity: 0;
+            /* When hidden, we disable pointer events so you can click the video behind it */
             pointer-events: none;
         }
 
@@ -61,11 +64,8 @@
             font-size: 2rem;
             font-weight: bold;
             text-transform: uppercase;
-            
-            /* Text color matches the Red background */
             color: #D32F2F; 
             background-color: white;
-            
             border: none;
             cursor: pointer;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
@@ -88,13 +88,11 @@
         
         <!-- Overlay + Button -->
         <div class="overlay" id="overlay">
-            <!-- Vice Versa text -->
             <button class="play-btn" id="playButton">-tive</button>
         </div>
 
         <!-- Video Element -->
         <video id="portfolioVideo" playsinline>
-            <!-- Updated file to teaching3.mp4 -->
             <source src="teaching3.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
@@ -106,17 +104,36 @@
         const overlay = document.getElementById('overlay');
         const playButton = document.getElementById('playButton');
 
-        // Click Button -> Hide Overlay -> Play Video
+        // --- BUTTON LOGIC ---
+        // When button is clicked: Play (or Resume) the video
         playButton.addEventListener('click', () => {
-            overlay.classList.add('hidden');
-            video.currentTime = 0; 
+            // If video was finished, reset to start. Otherwise, just resume.
+            if (video.ended) {
+                video.currentTime = 0;
+            }
             video.play();
         });
 
-        // Video Ends -> Show Overlay again
-        video.addEventListener('ended', () => {
+        // --- VIDEO LOGIC ---
+        // When video is clicked: Pause it
+        video.addEventListener('click', () => {
+            if (!video.paused) {
+                video.pause();
+            }
+        });
+
+        // --- STATE CHANGE LISTENERS ---
+        
+        // 1. When video starts playing, hide overlay
+        video.addEventListener('play', () => {
+            overlay.classList.add('hidden');
+        });
+
+        // 2. When video pauses (clicked or ended), show overlay
+        video.addEventListener('pause', () => {
             overlay.classList.remove('hidden');
         });
+
     </script>
 
 </body>
