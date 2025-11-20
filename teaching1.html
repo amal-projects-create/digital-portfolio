@@ -15,19 +15,23 @@
             font-family: sans-serif;
         }
 
-        /* The main container holds both the video and the overlay */
         .video-wrapper {
             position: relative;
             width: 100%;
-            max-width: 800px; /* Adjust this to change video size */
+            max-width: 800px;
             background: #000;
+            /* Ensures container maintains shape if video takes a moment to load */
+            min-height: 300px; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
         video {
             width: 100%;
             height: auto;
             display: block;
-            pointer-events: none; /* Prevents right-click/pausing via click */
+            pointer-events: none; 
         }
 
         /* The Red Overlay */
@@ -37,7 +41,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: #D32F2F; /* A nice solid Red */
+            background-color: #D32F2F; /* Red background */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -45,10 +49,9 @@
             transition: opacity 0.3s ease;
         }
 
-        /* Class to hide the overlay (fade out) */
         .overlay.hidden {
             opacity: 0;
-            pointer-events: none; /* Allows clicks to pass through to the video if needed */
+            pointer-events: none;
         }
 
         /* The Button Styling */
@@ -78,15 +81,16 @@
 
     <div class="video-wrapper">
         
-        <!-- The Overlay and Button -->
+        <!-- Overlay + Button -->
         <div class="overlay" id="overlay">
             <button class="play-btn" id="playButton">what she did</button>
         </div>
 
-        <!-- The Video -->
-        <!-- Removed 'muted' and 'autoplay' because the button triggers it now -->
+        <!-- Video Element -->
         <video id="portfolioVideo" playsinline>
-            <source src="teaching1.mkv" type="video/mkv">
+            <!-- Changed source to local MKV file -->
+            <source src="teaching1.mkv" type="video/mp4">
+            <source src="teaching1.mkv" type="video/x-matroska">
             Your browser does not support the video tag.
         </video>
 
@@ -97,19 +101,22 @@
         const overlay = document.getElementById('overlay');
         const playButton = document.getElementById('playButton');
 
-        // 1. Event Listener for the "What She Did" button
+        // 1. Click Button -> Hide Overlay -> Play Video
         playButton.addEventListener('click', () => {
-            // Hide the overlay
             overlay.classList.add('hidden');
+            video.currentTime = 0; // Start from beginning
             
-            // Reset video to start (in case it was played before) and play
-            video.currentTime = 0;
-            video.play();
+            // Use a promise to handle play errors (common with MKV/Browser compatibility)
+            var playPromise = video.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(error => {
+                    console.log("Playback failed (MKV might not be supported): " + error);
+                });
+            }
         });
 
-        // 2. Event Listener for when the video ends
+        // 2. Video Ends -> Show Overlay again
         video.addEventListener('ended', () => {
-            // Bring the overlay back
             overlay.classList.remove('hidden');
         });
     </script>
