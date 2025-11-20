@@ -3,85 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Positive - Pausable</title>
+    <title>Positive</title>
     <style>
-        body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100vh;
-            background-color: #000;
-            overflow: hidden; 
-            font-family: sans-serif;
-        }
-
-        .video-wrapper {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-        }
-
+        body { margin: 0; width: 100%; height: 100vh; background-color: #000; overflow: hidden; font-family: sans-serif; }
+        .video-wrapper { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+        
         video {
-            width: 100vw;
-            height: 100vh;
-            object-fit: cover; 
-            display: block;
-            pointer-events: auto; 
-            cursor: pointer; 
+            width: 100vw; height: 100vh; object-fit: cover; display: block;
+            pointer-events: auto; cursor: pointer; 
         }
 
-        /* GREEN Overlay */
         .overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #2E7D32; 
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 10; 
-            transition: opacity 0.3s ease;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #2E7D32; /* GREEN */
+            display: flex; justify-content: center; align-items: center;
+            z-index: 10; transition: opacity 0.3s ease;
         }
 
-        .overlay.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
+        .overlay.hidden { opacity: 0; pointer-events: none; }
 
         .play-btn {
-            padding: 15px 40px;
-            font-size: 2rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            color: #2E7D32; 
-            background-color: white;
-            border: none;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            padding: 15px 40px; font-size: 2rem; font-weight: bold; text-transform: uppercase;
+            color: #2E7D32; background-color: white; border: none; cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3); border-radius: 5px;
             transition: transform 0.1s ease;
-            border-radius: 5px; 
         }
-
         .play-btn:hover { transform: scale(1.05); }
         .play-btn:active { transform: scale(0.95); }
     </style>
 </head>
 <body>
-
     <div class="video-wrapper">
         <div class="overlay" id="overlay">
             <button class="play-btn" id="playButton">+tive</button>
         </div>
-
         <video id="portfolioVideo" playsinline>
-            <!-- Updated to teaching2.mp4 -->
+            <!-- UPDATED TO MP4 -->
             <source src="teaching2.mp4" type="video/mp4">
-            Your browser does not support the video tag.
         </video>
     </div>
 
@@ -90,18 +48,15 @@
         const overlay = document.getElementById('overlay');
         const playButton = document.getElementById('playButton');
 
-        // 1. Button Click: Play Video
         playButton.addEventListener('click', () => {
             if (video.ended) video.currentTime = 0;
-            video.play();
+            
+            video.play().catch(error => {
+                alert("Error playing video: " + error.message + "\n\nCheck that 'teaching2.mp4' is in the same folder.");
+            });
         });
 
-        // 2. Video Click: Pause Video
-        video.addEventListener('click', () => {
-            if (!video.paused) video.pause();
-        });
-
-        // 3. Toggle Overlay based on state
+        video.addEventListener('click', () => { if (!video.paused) video.pause(); });
         video.addEventListener('play', () => overlay.classList.add('hidden'));
         video.addEventListener('pause', () => overlay.classList.remove('hidden'));
         video.addEventListener('ended', () => overlay.classList.remove('hidden'));
