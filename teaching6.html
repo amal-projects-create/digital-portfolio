@@ -3,120 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Praise Words - Teaching 6</title>
+    <title>Teaching 6 - Loading...</title>
     <style>
-        /* 1. Make the Page Unscrollable */
-        body {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100vh;
-            background-color: #000;
-            overflow: hidden; 
-            font-family: sans-serif;
-        }
+        body { margin: 0; padding: 0; width: 100%; height: 100vh; background-color: #000; overflow: hidden; font-family: sans-serif; }
+        .video-wrapper { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
 
-        .video-wrapper {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
-        }
-
-        /* 2. Make Video Fill Screen & Maintain Aspect Ratio */
-        video {
-            width: 100vw;
-            height: 100vh;
-            object-fit: cover; 
-            display: block;
-            pointer-events: auto; /* Allows clicking to pause */
-            cursor: pointer; 
-        }
+        video { width: 100vw; height: 100vh; object-fit: cover; display: block; pointer-events: auto; cursor: pointer; }
 
         /* BLUE Overlay */
         .overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: #1976D2; /* Blue */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 10; 
-            transition: opacity 0.3s ease;
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #1976D2; /* BLUE */
+            display: flex; justify-content: center; align-items: center; flex-direction: column;
+            z-index: 10; transition: opacity 0.3s ease;
         }
+        .overlay.hidden { opacity: 0; pointer-events: none; }
 
-        .overlay.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        /* Button Styling */
         .play-btn {
-            padding: 15px 40px;
-            font-size: 2rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            color: #1976D2; /* Blue text */
-            background-color: white;
-            border: none;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            transition: transform 0.1s ease;
-            border-radius: 5px; 
+            padding: 15px 40px; font-size: 2rem; font-weight: bold; text-transform: uppercase;
+            color: #1976D2; background-color: white; border: none; cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3); border-radius: 5px;
+            transition: transform 0.1s ease; display: none;
         }
-
         .play-btn:hover { transform: scale(1.05); }
         .play-btn:active { transform: scale(0.95); }
+
+        .loader {
+            border: 5px solid rgba(255, 255, 255, 0.3); border-top: 5px solid #ffffff;
+            border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite; display: block;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
-
     <div class="video-wrapper">
-        
-        <!-- Overlay + Button -->
         <div class="overlay" id="overlay">
+            <div class="loader" id="loader"></div>
             <button class="play-btn" id="playButton">praise words</button>
         </div>
-
-        <!-- Video Element -->
-        <video id="portfolioVideo" playsinline>
+        <video id="portfolioVideo" playsinline preload="auto">
             <source src="teaching6.mp4" type="video/mp4">
             Your browser does not support the video tag.
         </video>
-
     </div>
-
     <script>
         const video = document.getElementById('portfolioVideo');
         const overlay = document.getElementById('overlay');
         const playButton = document.getElementById('playButton');
+        const loader = document.getElementById('loader');
 
-        // 1. Button Click: Play Video
+        function showPlayButton() { loader.style.display = 'none'; playButton.style.display = 'block'; }
+        function showLoader() { loader.style.display = 'block'; playButton.style.display = 'none'; }
+
+        if (video.readyState >= 3) showPlayButton();
+        else video.addEventListener('canplay', showPlayButton);
+        
+        video.addEventListener('waiting', showLoader);
+        video.addEventListener('playing', showPlayButton);
+
         playButton.addEventListener('click', () => {
             if (video.ended) video.currentTime = 0;
-            
-            video.play().catch(error => {
-                alert("Error playing video: " + error.message + "\n\nCheck that 'teaching6.mp4' is in the same folder.");
-            });
+            video.play().catch(e => alert("Error: " + e.message));
         });
-
-        // 2. Video Click: Pause Video
-        video.addEventListener('click', () => {
-            if (!video.paused) {
-                video.pause();
-            }
-        });
-
-        // 3. Toggle Overlay based on state
+        video.addEventListener('click', () => { if (!video.paused) video.pause(); });
         video.addEventListener('play', () => overlay.classList.add('hidden'));
         video.addEventListener('pause', () => overlay.classList.remove('hidden'));
         video.addEventListener('ended', () => overlay.classList.remove('hidden'));
     </script>
-
 </body>
 </html>
